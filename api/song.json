@@ -1,0 +1,9 @@
+{
+  "status": true,
+  "creator": "BADHON",
+  "api": {
+    "search": "https://yt-search-api.vercel.app/search?q={query}",
+    "audio": "https://yt-audio-api.vercel.app/download?url={video_url}"
+  },
+  "note": "Replace {query} with song name and {video_url} with selected video link"
+}
