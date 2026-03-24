@@ -3,38 +3,22 @@ const axios = require("axios");
 
 const app = express();
 
-// test route
-app.get("/", (req, res) => {
-  res.json({
-    status: "API Running ✅",
-    author: "Rocky Chowdhury"
-  });
-});
-
-// song api route
 app.get("/song", async (req, res) => {
   try {
     const query = req.query.q;
+    if (!query) return res.json({ error: "No query" });
 
-    if (!query) {
-      return res.json({
-        error: "Please provide song name ?q="
-      });
-    }
+    // ⚠️ demo replace with real source later
+    const audioUrl = "https://files.catbox.moe/2pmcyg.mp4"; // test audio/video
 
-    // Example: fake data / replace with real source
-    const result = {
-      title: query,
-      artist: "Unknown",
-      url: "https://example.com/song.mp3"
-    };
-
-    res.json(result);
-
-  } catch (err) {
     res.json({
-      error: err.message
+      title: query,
+      artist: "Rocky",
+      audio: audioUrl
     });
+
+  } catch (e) {
+    res.json({ error: e.message });
   }
 });
 
