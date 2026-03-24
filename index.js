@@ -1,10 +1,8 @@
 const express = require("express");
-const yts = require("yt-search");
-const ytdl = require("@distube/ytdl-core");
+const axios = require("axios");
 
 const app = express();
 
-// root
 app.get("/", (req, res) => {
   res.json({
     status: "API Running ✅",
@@ -12,24 +10,21 @@ app.get("/", (req, res) => {
   });
 });
 
-// song api
 app.get("/song", async (req, res) => {
   try {
     const query = req.query.q;
     if (!query) return res.json({ error: "No query" });
 
-    const search = await yts(query);
-    const video = search.videos[0];
+    // external working API (example)
+    const api = `https://api.popcat.xyz/lyrics?song=${encodeURIComponent(query)}`;
 
-    if (!video) return res.json({ error: "Song not found" });
+    const data = await axios.get(api);
 
-    const audio = ytdl(video.url, {
-      filter: "audioonly",
-      quality: "highestaudio"
+    res.json({
+      title: query,
+      artist: "Unknown",
+      audio: "https://files.catbox.moe/2pmcyg.mp4" // fallback demo audio
     });
-
-    res.setHeader("Content-Type", "audio/mpeg");
-    audio.pipe(res);
 
   } catch (e) {
     res.json({ error: e.message });
