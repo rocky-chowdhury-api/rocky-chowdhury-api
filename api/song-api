@@ -1,0 +1,46 @@
+const axios = require("axios");
+
+export default async function handler(req, res) {
+  const { query } = req.query;
+
+  if (!query) {
+    return res.json({
+      status: false,
+      message: "Song name required"
+    });
+  }
+
+  try {
+    // YouTube search API
+    const search = await axios.get(
+      `https://api.aniketdev.me/search/youtube?query=${encodeURIComponent(query)}`
+    );
+
+    const video = search.data.data[0];
+
+    if (!video) {
+      return res.json({
+        status: false,
+        message: "No song found"
+      });
+    }
+
+    // convert to mp3
+    const convert = await axios.get(
+      `https://api.aniketdev.me/youtube/mp3?url=${video.url}`
+    );
+
+    return res.json({
+      status: true,
+      title: video.title,
+      channel: video.channel,
+      audio: convert.data.audio
+    });
+
+  } catch (err) {
+    return res.json({
+      status: false,
+      error: err.message
+    });
+  }
+}
